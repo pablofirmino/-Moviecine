@@ -1,0 +1,74 @@
+
+    <div class="row">
+
+        <div class="row col s10" style="margin-top: 20px;">
+
+            {% if movie_list %}
+                {% for movie in movie_list %}
+                    <div class="col s6 m3 l3">
+                        <a style="display: block;" href="{% url 'moviecine:detail' movie.slug %}">
+                            <div class="card">
+                                <div class="card-image" style="background-image: url({{ movie.imagem.url }})">
+                                    <img src="https://images-na.ssl-images-amazon.com/images/G/01/imdb/images/nopicture/medium/name-2135195744._CB514893537_.png">
+                                </div>
+                                <div class="card-content">
+                                    <p style="display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ movie.titulo }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No movies are available.</p>
+            {% endif %}
+
+        </div>
+
+        <div class="col s2" style="margin-top: 20px;">
+            <div class="collection with-header" style="position: fixed;">
+                <h5 class="collection-header">Ordenar por</h5>
+                <a href="{% url 'moviecine:index' %}?orderby=titulo" {% if request.GET.orderby == 'title' %}
+                   class="collection-item active" {% else %} class="collection-item" {% endif %}>Título</a>
+                <a href="{% url 'moviecine:index' %}?orderby=-likes" {% if request.GET.orderby == '-likes' %}
+                   class="collection-item active" {% else %} class="collection-item" {% endif %}>Likes</a>
+            </div>
+        </div>
+    </div>
+
+    {% if is_paginated %}
+        <div class="container">
+            <ul class="pagination center-align">
+                {% if page_obj.has_previous %}
+                    <li class="waves-effect"><a
+                            href="{% if request.GET.orderby == None %} ?orderby=titulo{% else %} ?orderby={{ request.GET.orderby }}{% endif %}&page={{ page_obj.previous_page_number }}"><i
+                            class="material-icons">chevron_left</i></a></li>
+                {% else %}
+                    <li class="disabled"><a href="#"><i class="material-icons">chevron_left</i></a></li>
+                {% endif %}
+
+                {% for page in paginator.page_range %}
+                    <li {% if page == page_obj.number %} class="active" {% else %} class="waves-effect" {% endif %}><a
+                            href="{% if request.GET.orderby == None %} ?orderby=titulo{% else %} ?orderby={{ request.GET.orderby }}{% endif %}&page={{ page }}">{{ page }}</a>
+                    </li>
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="waves-effect"><a
+                            href="{% if request.GET.orderby == None %} ?orderby=titulo{% else %} ?orderby={{ request.GET.orderby }}{% endif %}&page={{ page_obj.next_page_number }}"><i
+                            class="material-icons">chevron_right</i></a>
+                    </li>
+                {% else %}
+                    <li class="disabled"><a href="#"><i class="material-icons">chevron_right</i></a></li>
+                {% endif %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {% block footer %}
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="{% static 'materialize/bin/materialize.js' %}"></script>
+    {% endblock %}
+
+</div>
+</body>
+</html>
