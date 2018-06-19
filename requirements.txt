@@ -1,0 +1,9 @@
+Django==2.0.2
+django-filter==1.1.0
+django-material==1.2.2
+django-materialize-css==0.0.1
+django-viewflow==1.2.0
+djangorestframework==3.7.7
+Pillow==5.0.0
+pytz==2018.3
+virtualenv==15.1.0
