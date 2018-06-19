@@ -1,0 +1,57 @@
+import datetime
+from functools import partial
+
+from django.contrib.auth.models import User
+from django.db import models
+from django.db.models import signals
+# Create your models here.
+from django.utils.text import slugify
+
+YEAR_CHOICES = []
+for r in range(1870, (datetime.datetime.now().year + 1)):
+    YEAR_CHOICES.append((r, r))
+
+
+def make_filepath(field_name, instance, filename):
+    '''
+        Produces a unique file path for the upload_to of a FileField.
+        The produced path is of the form:
+        "[model name]/[field name]/[random name].[filename extension]".
+    '''
+    new_filename = "%s.%s" % (User.objects.make_random_password(10),
+                              filename.split('.')[-1])
+    return '/'.join([field_name, new_filename])
+
+
+class Actor(models.Model):
+    nome = models.CharField(max_length=255, unique=True)
+    imagem = models.ImageField(upload_to=partial(make_filepath, 'actors'), blank=True)
+
+    def __str__(self):
+        return self.nome
+
+    class Meta:
+        ordering = ['nome']
+
+
+class Movie(models.Model):
+    titulo_original = models.CharField(max_length=255)
+    titulo = models.CharField(max_length=255)
+    duracao = models.BigIntegerField(default=0)
+    slug = models.SlugField(max_length=200, blank=True)
+    sinopse = models.TextField()
+    imagem = models.FileField(upload_to=partial(make_filepath, 'movies'), blank=True)
+    likes = models.BigIntegerField(default=0)
+    publicado = models.BooleanField(default=False)
+    atores = models.ManyToManyField(Actor, related_name='actors')
+    ano = models.IntegerField(choices=YEAR_CHOICES, default=datetime.datetime.now().year)
+
+    def __str__(self):
+        return self.titulo
+
+
+def movie_pre_save(signal, instance, sender, **kwargs):
+    instance.slug = slugify(instance.titulo)
+
+
+signals.pre_save.connect(movie_pre_save, sender=Movie)
