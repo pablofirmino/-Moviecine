@@ -1,0 +1,164 @@
+{% load staticfiles%}
+
+< html >
+< cabeça >
+    <! - Importar materialize.css ->
+    < link  type = " text / css "  rel = " folha de estilo "  href = " {% static 'materialize / bin / materialize.css'%} "
+          media = " tela, projeção " />
+    < link  href = " https://fonts.googleapis.com/icon?family=Material+Icons "  rel = " stylesheet " >
+
+    < style >
+        ul .tabs  li .tab {
+            preenchimento : 0  15 px ;
+            largura : auto  ! importante ;
+        }
+        .tabs  li .tab  a {
+            cor : rgba ( 255 , 255 , 255 , 0,7 );
+        }
+        .tabs  li .tab  a : hover {
+            cor : rgba ( 255 , 255 , 255 , 0,9 );
+        }
+        .tabs  .tab  a : hover , .tabs  .tab  um .active {
+            cor de fundo : transparente ;
+            cor : branco ;
+        }
+        .tabs  .indicator {
+            altura : 5 px ;
+            cor de fundo : branco ;
+        }
+        form {
+            margem : 0 ;
+        }
+        .card  .card-image {
+            fundo : centro central sem repetição  ; 
+            tamanho de fundo : capa ;
+            estouro : oculto ;
+        }
+        .card  .card-image  img {
+            min-altura : 100 % ;
+            min-width : 100 % ;
+            / * IE 8 * /
+            -ms-filter : " progid: DXImageTransform.Microsoft.Alpha (Opacity = 0) " ;
+            / * IE 5-7 * /
+            filtro : alfa (opacidade = 0 );
+            / * navegadores modernos * /
+            opacidade : 0 ;
+        }
+        .btn-floating.btn-large.halfway-fab {
+            fundo : -28 px ;
+        }
+        .btn-floating.halfway-fab {
+            posição : absoluta ;
+            direita : 24 px ;
+            fundo : -20 px ;
+        }
+    < / style >
+</ head >
+< body >
+
+< div  class = " container " >
+
+    < div  class = " row "  style = " top de margem: 20px; " >
+
+        < div  class = " card "  style = " margin: 0; " >
+            < div  style = " background-imagem: linear-gradient (para baixo, rgba (0, 0, 0, 0.7), rgba (0, 0, 0, 0.7)), url ({{movie.imagem.url}} );
+                    background-image: -moz-linear-gradiente (top, rgba (0, 0, 0, 0.7), rgba (0, 0, 0, 0.7)), url ({{movie.imagem.url}});
+                    background-image: -o-linear-gradiente (top, rgba (0, 0, 0, 0,7), rgba (0, 0, 0, 0,7)), url ({{movie.imagem.url}});
+                    background-image: -ms-linear-gradiente (top, rgba (0, 0, 0, 0,7), rgba (0, 0, 0, 0,7)), url ({{movie.imagem.url}});
+                    background-image: -webkit-gradient (linear, superior esquerdo, inferior esquerdo, de (rgba (0, 0, 0, 0.7)), para (rgba (0, 0, 0,
+                    0.7))), url ({{movie.imagem.url}});
+                    background-image: -webkit-linear-gradient (superior, rgba (0, 0, 0, 0,7), rgba (0, 0, 0, 0,7)),
+                    url ({{movie.imagem.url}}); posição de fundo: centro central; background-repeat: não-repetição; tamanho do plano de fundo: capa; posição: relativa; " >
+                < div  class = " card-content " >
+                    < div  class = " row "  style = " posição: relativo; " >
+                        < img  class = " col s2 "
+                             src = " {{movie.imagem.url}} "
+                             style = " max-height: 100%; max-largura: 100%; " />
+
+                        < div  class = " linha col s10 offset-s2 "
+                             style = " margin-bottom: 0; font-weight: 500; posição: absoluto; bottom: 0; cor: branco; " >
+                            < h4  class = " col s12 "  estilo = " margin-bottom: 0; " > {{movie.titulo}} </ h4 >
+
+                            < h6  class = " col s12 "  estilo = " margin-bottom: 0; " > ({{movie.ano}}) </ h6 >
+                        </ div >
+                    </ div >
+                </ div >
+                < div  class = " contêiner de guias de cartão "  style = " background: transparent; margin: 0; " >
+                    < ul  class = " separadores tabs-fixed-width "  style = " fundo: transparente; " >
+                        < Li  class = " guia "  estilo = " background: transparente; " > < a  class = " ativo "  href = " #overview " > Visão
+                            geral </ a >
+                        </ li >
+                        < Li  class = " guia "  estilo = " background: transparente; " > < a  href = " #casting " > Elenco </ a >
+                        </ li >
+                    </ ul >
+                </ div >
+
+                < form  action = " {% url 'moviecine: likeSlug' movie.slug%} "  método = " post " >
+                    {% csrf_token%}
+                    < button  type = " submit "  class = " btn-flutuante btn-grande meio caminho-fab ondas-efeito ondas-luz rosa "
+                            style = " margin: 0; " >
+                        < i  class = " material-icons " > thumb_up </ i >
+                    </ button >
+                </ form >
+            </ div >
+
+            < div  class = " conteúdo do cartão cinzento lighten-4 "  style = " preenchimento: 25px 20px; " >
+                < div  id = " visão geral " >
+                    < div  class = " row "  style = " preenchimento: 0 1.5rem; " >
+                        < span  class = " col s6 "
+                              style = " color: # 4A4A4A; " > Título original: < strong > {{movie.titulo_original}} </ strong > </ span >
+                        < span  class = " col s3 "  estilo = " cor: # 4A4A4A; borda esquerda: 1px sólido # 979797 " > {{movie.duracao}} segundos </ span >
+                        < span  class = " col s3 "
+                              style = " color: # 4A4A4A; borda esquerda: 1px sólido # 979797 " > < strong > {{movie.likes}}
+                            {% if movie.likes == 0 ou movie.likes> 1%} gostos {% else%}
+                                como {% endif%} </ strong > </ span >
+                    </ div >
+
+                    < div  class = " divider "  style = " cor de fundo: # 979797; " > </ div >
+
+                    < div  class = " row "  style = " top de margem: 20px; " >
+                        < div  class = " col s12 " >
+                            < p  style = " padding: 0 1.5rem; espaço em branco: pre-wrap " > {{movie.sinopse}} </ p >
+                        </ div >
+                    </ div >
+                </ div >
+                < div  id = " casting " >
+                    < div  class = " row " >
+                        {% if movie.atores%}
+                            {% de ator em movie.atores.all%}
+                                < div  class = " col s6 m3 l3 " >
+                                    < div  class = " card " >
+                                        < div  class = " card-image "  style = " imagem de fundo: url ({{ator.imagem.url}}) " >
+                                            < img  src = " https://images-na.ssl-images-amazon.com/images/G/01/imdb/images/nopicture/medium/name-2135195744._CB514893537_.png " >
+                                        </ div >
+                                        < div  class = " card-content " >
+                                            < p  style = " display: bloco; espaço em branco: nowrap; overflow: oculto; text-overflow: reticências; " > {{ator.nome}} </ p >
+                                        </ div >
+                                    </ div >
+                                </ div >
+                            {% endfor%}
+                        {% outro %}
+                            < p > Nenhum ator está disponível. </ p >
+                        {% fim se %}
+                    </ div >
+                </ div >
+            </ div >
+        </ div >
+
+    </ div >
+
+</ div >
+
+{% block footer%}
+    < script  type = " text / javascript "  src = " https://code.jquery.com/jquery-2.1.1.min.js " > < / script >
+    < script  type = " text / javascript "  src = " {% estático 'materialize / bin / materialize.js'%} " > < / script >
+    < script >
+        $ ( documento ). pronto ( function () {
+            $ ( ' ul.tabs ' ). guias ();
+        });
+    < / script >
+{% endblock%}
+
+</ div >
+</ body >
+</ html >
